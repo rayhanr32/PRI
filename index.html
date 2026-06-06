@@ -520,9 +520,18 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
           <input type="text" name="parentName" placeholder="Your full name" required autocomplete="name">
         </div>
         <div class="field">
-          <label>Cat's age</label>
-          <input type="number" name="catAge" placeholder="Age in years" min="0" max="30">
-        </div>
+        <label>Cat's age</label>
+        <div style="display:flex;gap:8px;">
+          <select name="catAgeYears" style="flex:1;font-size:15px;padding:12px 14px;border:1px solid var(--border-md);border-radius:var(--radius-sm);background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;-webkit-appearance:none;appearance:none;outline:none;">
+            <option value="">Years</option>
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option>
+          </select>
+          <select name="catAgeMonths" style="flex:1;font-size:15px;padding:12px 14px;border:1px solid var(--border-md);border-radius:var(--radius-sm);background:var(--cream);color:var(--text);font-family:'DM Sans',sans-serif;-webkit-appearance:none;appearance:none;outline:none;">
+            <option value="">Months</option>
+            <option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option>
+          </select>
+          </div>
+          </div>
         <div class="field">
           <label>Neutered / Spayed</label>
           <div class="radio-group">
@@ -656,7 +665,10 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
     const fd = new FormData(this);
     const entry = { submittedAt: new Date().toLocaleString('en-GB') };
     fd.forEach((v, k) => { if (k !== 'vaccinationCard') entry[k] = v; });
-    const fi = document.getElementById('fileInput');
+    const y = entry.catAgeYears; const m = entry.catAgeMonths;
+    entry.catAge = (y && y!=='') && (m && m!=='') ? y+' yrs '+m+' months' : (y && y!=='') ? y+' years' : (m && m!=='') ? m+' months' : '';
+    delete entry.catAgeYears; delete entry.catAgeMonths;
+        const fi = document.getElementById('fileInput');
     if (fi.files[0]) entry.vaccinationCard = fi.files[0].name;
 
     try {
