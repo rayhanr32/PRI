@@ -583,7 +583,7 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
 </div>
 
 <script>
-  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwufJ5B0qvWzubeuSoNbWFaiuqW-w5uc0wLOfg1b4BIxo5NTL5uoNUQ2ZUpXeE3YKSEcA/exec';
+  const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxjU6Yukp5P6rS1nFW-mdVutNJyuu1EJoef2b8qJzIhJTzT11pC_tsaRVQQkYVhXIqbdw/exec';
   const ADMIN_PIN  = '1611';
 
   document.getElementById('fileInput').addEventListener('change', function () {
@@ -605,8 +605,19 @@ input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
     const y = entry.catAgeYears; const m = entry.catAgeMonths;
     entry.catAge = (y && y!=='') && (m && m!=='') ? y+' yrs '+m+' months' : (y && y!=='') ? y+' years' : (m && m!=='') ? m+' months' : '';
     delete entry.catAgeYears; delete entry.catAgeMonths;
+
     const fi = document.getElementById('fileInput');
-    if (fi.files[0]) entry.vaccinationCard = fi.files[0].name;
+    if (fi.files[0]) {
+      entry.vaccinationCardName = fi.files[0].name;
+      entry.vaccinationCardType = fi.files[0].type;
+      // Read file as base64
+      const b64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result.split(',')[1]);
+        reader.readAsDataURL(fi.files[0]);
+      });
+      entry.vaccinationCardData = b64;
+    }
 
     try {
       await fetch(SCRIPT_URL, {
